@@ -1,0 +1,48 @@
+#!/bin/zsh
+
+sep="^"
+ex=0
+
+# The first : is to avoid printing errors at reading parameters
+while getopts ":es:h" opt; do
+  case $opt in
+    e)
+      ex=1;;
+    s)
+      sep=$OPTARG;;
+    h)
+      show_help
+      exit 0;;
+    \?)
+      echo "Invalid option: -$OPTARG. Use -h flag for help." >&2;;
+  esac
+done
+
+#This tells getopts to move on to the next argument.
+shift $(($OPTIND-1))
+
+if [ -z "$1" ]; then
+  echo "Error, you must specify a filename"
+  show_help
+  exit 1
+fi
+
+
+
+# awk -F"$sep" '(FNR==1){for(i=1;i<=NF;i++){print i " - " $i}}' $1
+awk -F"$sep" -v awk_ex=$ex '
+  BEGIN{
+    split("", body)
+  }
+  (FNR==1) {
+    split($0, header)
+  }
+  (FNR==2 && awk_ex) {
+    split($0, body)
+  }
+  END {
+    for (i in header) {
+      resto = (length(body) > 0) ? " -> " body[i] : ""
+      print i ". " header[i] resto
+    }
+ }' "$1"
