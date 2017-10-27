@@ -3,17 +3,17 @@
 show_help() {
 echo "
 
-        Usage: Environment DBPassword [-V Version] [-R Revision] [-S Schema] [-P] [-F] [-U Username]
+  Usage: colnum [-e] [-s sep] filename
 
-        -V Version      Version to deploy.
-        -R Revision     Revision number (0 means the latest revision).
-        -S Schema       Schema in the DB to deploy.
-        -F              Full deploy
-        -U              Username. This User who run the deploy.
+  -e            Example provided [default no]
+  -s            Field delimiter
+  -h            Show this help
+  filename      File to list columns. Required
 
-        For Example: ./deploy server1 123456 -V v1.0 -R 12345 -S schema1 -P -F -U User1
-
-        -H              Help
+  Examples:     colnum something.txt
+                colnum -e something.txt
+                colnum -s '|' something.txt
+                colnum -es '#' something
 
 "
 }
