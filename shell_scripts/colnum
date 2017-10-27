@@ -3,10 +3,12 @@
 show_help() {
 echo "
 
+  colum:	Numbers the columns of a csv file for easy reference
+
   Usage: colnum [-e] [-s sep] filename
 
-  -e            Example provided [default no]
-  -s            Field delimiter
+  -e            Show example [default no]
+  -s            Field delimiter [default ^]
   -h            Show this help
   filename      File to list columns. Required
 
