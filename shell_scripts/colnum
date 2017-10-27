@@ -3,7 +3,7 @@
 show_help() {
 echo "
 
-  colum:	Numbers the columns of a csv file for easy reference
+  colnum:	Numbers the columns of a csv file for easy reference
 
   Usage: colnum [-e] [-s sep] filename
 
