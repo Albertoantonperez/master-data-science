@@ -48,9 +48,6 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
-
-
-# awk -F"$sep" '(FNR==1){for(i=1;i<=NF;i++){print i " - " $i}}' $1
 awk -F"$sep" -v awk_ex=$ex '
   BEGIN{
     split("", body)
