@@ -12,10 +12,10 @@ echo "
   -h            Show this help
   filename      File to list columns. Required
 
-  Examples:     colnum something.txt
-                colnum -e something.txt
-                colnum -s '|' something.txt
-                colnum -es '#' something
+  Examples:     colnum somefile.csv
+                colnum -e somefile.csv
+                colnum -s '|' somefile.csv
+                colnum -es '#' somefile.csv
 
 "
 }
@@ -35,7 +35,7 @@ while getopts ":es:h" opt; do
       show_help
       exit 0;;
     \?)
-      echo "Invalid option: -$OPTARG. Use -h flag for help." >&2
+      echo "Invalid option: -$OPTARG." >&2
       show_help
       exit 2;;
   esac
@@ -45,7 +45,7 @@ done
 shift $(($OPTIND-1))
 
 if [ -z "$1" ]; then
-  echo "Error, you must specify a filename"
+  echo "Error, you must specify a filename."
   show_help
   exit 1
 fi
@@ -59,6 +59,7 @@ awk -F"$sep" -v awk_ex=$ex '
   }
   (FNR==2 && awk_ex) {
     split($0, body)
+    exit 0
   }
   END {
     for (i in header) {
