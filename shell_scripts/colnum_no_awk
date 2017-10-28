@@ -1,0 +1,68 @@
+#!/bin/zsh
+
+show_help() {
+echo "
+
+  colnum:	Numbers the columns of a csv file for easy reference
+
+  Usage: colnum [-e] [-s sep] filename
+
+  -e            Show example [default no]
+  -d            Field delimiter [default ^]
+  -h            Show this help
+  filename      File to list columns. Required
+
+  Examples:     colnum somefile.csv
+                colnum -e somefile.csv
+                colnum -d '|' somefile.csv
+                colnum -ed '#' somefile.csv
+
+"
+}
+
+
+sep="^"
+ex=0
+
+# The first : is to avoid printing errors at reading parameters
+while getopts ":es:h" opt; do
+  case $opt in
+    e)
+      ex=1;;
+    d)
+      sep=$OPTARG;;
+    h)
+      show_help
+      exit 0;;
+    \?)
+      echo "Invalid option: -$OPTARG." >&2
+      show_help
+      exit 2;;
+  esac
+done
+
+#This tells getopts to move on to the next argument.
+shift $(($OPTIND-1))
+
+if [ -z "$1" ]; then
+  echo "Error, you must specify a filename."
+  show_help
+  exit 1
+fi
+
+nl=$(( $(wc -l "$1" | cut -d" " -f1) - 1))
+r_line=$(( $(($RANDOM % $nl)) + 1))
+
+header=$(head -1 "$1" | tr "$sep" "\n")
+
+c_number=$(echo $header | wc -l)
+
+t_sep=$(printf '\t\n%.0s' {1..$c_number})
+
+if [ $ex -eq 1 ]; then
+  body=$(sed -n "${r_line}p" "$1" | tr "$sep" "\n")
+
+  p_sep=$(printf ' -> \n%.0s' {1..$c_number})
+fi
+
+paste -d" " <(seq $c_number) <(echo $t_sep) <(echo $header) <(echo $p_sep) <(echo $body)
