@@ -8,14 +8,14 @@ echo "
   Usage: colnum [-e] [-s sep] filename
 
   -e            Show example [default no]
-  -s            Field delimiter [default ^]
+  -d            Field delimiter [default ^]
   -h            Show this help
   filename      File to list columns. Required
 
   Examples:     colnum somefile.csv
                 colnum -e somefile.csv
-                colnum -s '|' somefile.csv
-                colnum -es '#' somefile.csv
+                colnum -d '|' somefile.csv
+                colnum -ed '#' somefile.csv
 
 "
 }
@@ -29,7 +29,7 @@ while getopts ":es:h" opt; do
   case $opt in
     e)
       ex=1;;
-    s)
+    d)
       sep=$OPTARG;;
     h)
       show_help
@@ -50,16 +50,26 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
-awk -F"$sep" -v awk_ex=$ex '
+nl=$(wc -l "$1")
+
+awk -F"$sep" -v awk_ex=$ex -v awk_nl=$nl '
   BEGIN{
     split("", body)
+    srand()
+    # Random line between 2nd and last lines of the file
+    rnd_line=int(rand() * (awk_nl - 1) + 2)
   }
-  (FNR==1) {
-    split($0, header)
-  }
-  (FNR==2 && awk_ex) {
-    split($0, body)
-    exit 0
+  {
+    if (FNR==1) {
+      split($0, header)
+      if (awk_ex==0) {
+        exit 0
+     }
+    }
+    if (FNR==rnd_line && awk_ex) {
+      split($0, body)
+      exit 0
+    }
   }
   END {
     for (i in header) {
