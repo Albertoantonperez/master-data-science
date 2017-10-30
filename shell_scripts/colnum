@@ -5,17 +5,17 @@ echo "
 
   colnum:	Numbers the columns of a csv file for easy reference
 
-  Usage: colnum [-e] [-s sep] filename
+  Usage: colnum [-s] [-d sep] filename
 
-  -e            Show example [default no]
+  -s            Show data sample [default no]
   -d            Field delimiter [default ^]
   -h            Show this help
   filename      File to list columns. Required
 
   Examples:     colnum somefile.csv
-                colnum -e somefile.csv
+                colnum -s somefile.csv
                 colnum -d '|' somefile.csv
-                colnum -ed '#' somefile.csv
+                colnum -sd '#' somefile.csv
 
 "
 }
@@ -27,7 +27,7 @@ ex=0
 # The first : is to avoid printing errors at reading parameters
 while getopts ":es:h" opt; do
   case $opt in
-    e)
+    s)
       ex=1;;
     d)
       sep=$OPTARG;;
